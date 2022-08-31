@@ -6,7 +6,7 @@ on:
    
 
 jobs:
-  mirror:
+  master:
     runs-on: ubuntu-latest
 
     steps:
@@ -18,14 +18,14 @@ jobs:
 
       - name: Set Git Configs & Secrets
         run: |
-          git config --global user.email ${{ secrets.GITMAIL }}
-          git config --global user.name ${{ secrets.GITUSER }}
+          git config --global user.email ${{ secrets.GHMAIL }}
+          git config --global user.name ${{ secrets.GHUSER }}
           git config --global credential.helper store
-          echo "https://${{ secrets.GITUSER }}:${{ secrets.GIT_TOKEN }}@github.com" > ~/.git-credentials
+          echo "https://${{ secrets.GHUSER }}:${{ secrets.GH_TOKEN }}@github.com" > ~/.git-credentials
 
       - name: Clone Mirror Repo
         run: |
-          git clone https://${{ secrets.GIT_TOKEN }}@github.com/${{ secrets.GITUSER }}/${{ secrets.REPO }} source
+          git clone https://${{ secrets.GH_TOKEN }}@github.com/${{ secrets.GHUSER }}/${{ secrets.REPO }} source
 
       - name: Compile Docker
         run: |
@@ -42,7 +42,7 @@ jobs:
       - name: Loop Workflow
         continue-on-error: true
         run: |
-          git clone https://${{ secrets.GIT_TOKEN }}@github.com/${GITHUB_REPOSITORY} loop
+          git clone https://${{ secrets.GH_TOKEN }}@github.com/${GITHUB_REPOSITORY} loop
           cd loop || exit 1
           git commit --allow-empty -m "Workflow: Loop"
           git push -f
